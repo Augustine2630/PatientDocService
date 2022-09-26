@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
-public class UserRestController {
+@RequestMapping("/usr")
+public class UserController {
 
     private final UserRepository userRepository;
 
     @Autowired
-    public UserRestController(UserRepository userRepository) {
+    public UserController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 

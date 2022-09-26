@@ -1,8 +1,11 @@
 package com.august.medicalservice.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "doctor_data")
@@ -25,11 +28,23 @@ public class DoctorData {
     @Column(name = "speciality_code", nullable = false)
     private String specialityCode;
 
+    @OneToMany(mappedBy = "doctorData", orphanRemoval = true)
+    @JsonManagedReference
+    private List<DoctorAppointments> doctorAppointmentses = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     @JsonBackReference
     private User user;
+
+    public List<DoctorAppointments> getDoctorAppointmentses() {
+        return doctorAppointmentses;
+    }
+
+    public void setDoctorAppointmentses(List<DoctorAppointments> doctorAppointmentses) {
+        this.doctorAppointmentses = doctorAppointmentses;
+    }
+
 
     public User getUser() {
         return user;

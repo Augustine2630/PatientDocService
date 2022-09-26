@@ -11,6 +11,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/doc")
@@ -25,6 +26,12 @@ public class DoctorController {
     @GetMapping("/get-docs")
     public List<DoctorData> getAllDoctors(){
         return doctorService.getAllDoctors();
+    }
+
+
+    @GetMapping("/get-doc/{id}")
+    public Optional<DoctorData> getDoctorById(@PathVariable(value = "id", required = true) int id){
+        return doctorService.getDoctor(id);
     }
 
     @PostMapping("/new-doc")
@@ -42,6 +49,13 @@ public class DoctorController {
         doctorService.saveDoctor(convertToDoctor(doctorDTO));
         return ResponseEntity.ok((HttpStatus.OK));
     }
+
+    @GetMapping("/get-spec")
+    public List<DoctorData> showDoctorAppointments(@RequestParam(name = "speciality") String speciality){
+        return doctorService.getDoctorsBySpeciality(speciality);
+    }
+
+
 
     private DoctorData convertToDoctor(DoctorDTO doctorDTO){
         DoctorData doctorData = new DoctorData();

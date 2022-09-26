@@ -31,8 +31,8 @@ public class PatientData implements Serializable {
     @Size(min = 4, message = "email must be at least 5 characters")
     private String email;
 
-    @Column(name = "patient_data", nullable = true)
-    private String patientData;
+    @Column(name = "about_patient", nullable = true)
+    private String aboutData;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -72,12 +72,12 @@ public class PatientData implements Serializable {
         this.lastName = lastName;
     }
 
-    public String getPatientData() {
-        return patientData;
+    public String getAboutData() {
+        return aboutData;
     }
 
-    public void setPatientData(String patientData) {
-        this.patientData = patientData;
+    public void setAboutData(String aboutData) {
+        this.aboutData = aboutData;
     }
 
     public String getEmail() {

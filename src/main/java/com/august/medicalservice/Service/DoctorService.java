@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DoctorService {
@@ -23,5 +24,13 @@ public class DoctorService {
     @Transactional
     public void saveDoctor(DoctorData doctorData){
         doctorDataRepository.save(doctorData);
+    }
+
+    public Optional<DoctorData> getDoctor(int id){
+        return doctorDataRepository.findById(id);
+    }
+
+    public List<DoctorData> getDoctorsBySpeciality(String speciality){
+        return doctorDataRepository.findAllByDoctorSpeciality(speciality);
     }
 }
