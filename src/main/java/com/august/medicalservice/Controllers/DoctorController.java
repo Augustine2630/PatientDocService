@@ -2,6 +2,8 @@ package com.august.medicalservice.Controllers;
 
 import com.august.medicalservice.DTO.DoctorDTO;
 import com.august.medicalservice.Service.DoctorService;
+import com.august.medicalservice.Utils.Exceptions.DoctorErrorResponse;
+import com.august.medicalservice.Utils.Exceptions.DoctorNotCreatedException;
 import com.august.medicalservice.models.DoctorData;
 import com.august.medicalservice.models.User;
 import org.springframework.http.HttpStatus;
@@ -44,7 +46,7 @@ public class DoctorController {
                         .append(";");
             }
 
-            return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
+            throw new DoctorNotCreatedException(errorMsg.toString());
         }
         doctorService.saveDoctor(convertToDoctor(doctorDTO));
         return ResponseEntity.ok((HttpStatus.OK));
@@ -53,6 +55,15 @@ public class DoctorController {
     @GetMapping("/get-spec")
     public List<DoctorData> showDoctorAppointments(@RequestParam(name = "speciality") String speciality){
         return doctorService.getDoctorsBySpeciality(speciality);
+    }
+
+    @ExceptionHandler()
+    private ResponseEntity<DoctorErrorResponse> handleException(DoctorNotCreatedException e){
+        DoctorErrorResponse response = new DoctorErrorResponse(
+                e.getMessage(),
+                System.currentTimeMillis()
+        );
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
 
