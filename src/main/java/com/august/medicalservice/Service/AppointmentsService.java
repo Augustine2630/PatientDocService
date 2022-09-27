@@ -19,7 +19,7 @@ public class AppointmentsService {
         return doctorAppointmentsRepository.findByReceptionTime(receptionTime);
     }
 
-//    public void createRecordOnTime(){
-//        doctorAppointmentsRepository.
-//    }
+    public void appoint(Boolean isRecorded, String user, Integer doctorId){
+        doctorAppointmentsRepository.createUserRecord(isRecorded, user, doctorId);
+    }
 }

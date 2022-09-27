@@ -1,12 +1,13 @@
 package com.august.medicalservice.Controllers;
 
+import com.august.medicalservice.DTO.UserAppointDTO;
 import com.august.medicalservice.Service.AppointmentsService;
 import com.august.medicalservice.models.DoctorAppointments;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -23,4 +24,23 @@ public class AppointmentsController {
     public List<DoctorAppointments> getAllByTime(@RequestParam("time") String time){
         return appointmentsService.getByTime(time);
     }
+
+    @PostMapping("/make-appoint")
+    public ResponseEntity<HttpStatus> makeAnAppointment(Boolean isRecorded,
+                                                        String userData, Integer doctorId){
+
+        appointmentsService.appoint(isRecorded, userData, doctorId);
+
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    private DoctorAppointments convertToAppoint(UserAppointDTO userAppointDTO, Principal principal){
+        DoctorAppointments doctorAppointments = new DoctorAppointments();
+
+        doctorAppointments.setIsRecorded(true);
+        doctorAppointments.setWhoRecorded(principal.getName());
+        return doctorAppointments;
+    }
+
+
 }

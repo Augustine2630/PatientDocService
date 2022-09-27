@@ -11,4 +11,9 @@ public interface DoctorAppointmentsRepository extends JpaRepository<DoctorAppoin
 
     List<DoctorAppointments> findByReceptionTime(String receptionTime);
 
+    @Query(nativeQuery = true,
+            value = "UPDATE doctor_appointments SET is_recorded = ?1, who_recorded = ?2" +
+                    "where reception_time = '9.00' and doctor_id = ?3")
+    void createUserRecord(Boolean isRecorded, String whoRecorded, Integer doctorId);
+
 }
