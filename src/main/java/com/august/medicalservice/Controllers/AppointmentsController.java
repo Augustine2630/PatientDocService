@@ -2,9 +2,15 @@ package com.august.medicalservice.Controllers;
 
 import com.august.medicalservice.DTO.UserAppointDTO;
 import com.august.medicalservice.Service.AppointmentsService;
+import com.august.medicalservice.Utils.Exceptions.AppointErrorResponse;
+import com.august.medicalservice.Utils.Exceptions.AppointException;
+import com.august.medicalservice.Utils.Exceptions.DoctorErrorResponse;
+import com.august.medicalservice.Utils.Exceptions.DoctorNotCreatedException;
 import com.august.medicalservice.models.DoctorAppointments;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -27,11 +33,31 @@ public class AppointmentsController {
 
     @PostMapping("/make-appoint")
     public ResponseEntity<HttpStatus> makeAnAppointment(Boolean isRecorded,
-                                                        String userData, Integer doctorId){
+                                                        String userData, Integer doctorId,
+                                                        BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            StringBuilder errorMsg = new StringBuilder();
+            List<FieldError> errors = bindingResult.getFieldErrors();
+            for (FieldError error : errors){
+                errorMsg.append(error.getField()).append(" - ").append(error.getDefaultMessage())
+                        .append(";");
+            }
+
+            throw new AppointException(errorMsg.toString());
+        }
 
         appointmentsService.appoint(isRecorded, userData, doctorId);
 
         return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @ExceptionHandler()
+    private ResponseEntity<AppointErrorResponse> handleException(AppointException e){
+        AppointErrorResponse response = new AppointErrorResponse(
+                e.getMessage(),
+                System.currentTimeMillis()
+        );
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     private DoctorAppointments convertToAppoint(UserAppointDTO userAppointDTO, Principal principal){
